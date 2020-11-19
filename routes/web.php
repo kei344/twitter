@@ -22,3 +22,8 @@ Route::post('signup', 'Auth\RegisterController@register')->name('signup.post');
 Route::get('login', 'Auth\loginController@showLoginForm')->name('login.get');
 Route::post('login', 'Auth\loginController@login')->name('login.post');
 Route::get('logout', 'Auth\loginController@logout')->name('logout.get');
+
+//  ユーザー機能
+Route::group(['middleware' => ['auth']], function () {
+    Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
+});
