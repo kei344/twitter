@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Twitter;
 
 class UsersController extends Controller
 {
@@ -27,5 +28,33 @@ class UsersController extends Controller
         $data += $this->counts($user);
 
         return view('users.show', $data);
+    }
+
+    public function followings($id) {
+        $user = User::find($id);
+        $users = $user->followings()->paginate(10);
+
+        $data = [
+            'user' => $user,
+            'users' => $users,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.followings', $data);
+    }
+
+    public function followers($id) {
+        $user = User::find($id);
+        $users = $user->followers()->paginate(10);
+
+        $data = [
+            'user' => $user,
+            'users' => $users,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.followers', $data);
     }
 }
