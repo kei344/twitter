@@ -17,9 +17,15 @@ class UsersController extends Controller
 
     public function show($id) {
         $user = User::find($id);
+        $twitters = $user->twitters()->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('users.show', [
+        $data = [
             'user' => $user,
-        ]);
+            'twitters' => $twitters,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.show', $data);
     }
 }
