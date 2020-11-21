@@ -10,11 +10,11 @@ class TwittersController extends Controller
         $data = [];
         if (\Auth::check()) {
             $user = \Auth::user();
-            $twitters = $user->twitters()->orderBy('created_at', 'desc')->paginate(10);
+            $twitters = $user->feed_twitters()->orderBy('created_at', 'desc')->paginate(10);
 
             $data = [
                 'user' => $user,
-                'twitters' => $twitter,
+                'twitters' => $twitters,
             ];
         }
 
