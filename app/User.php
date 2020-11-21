@@ -80,4 +80,40 @@ class User extends Authenticatable
         $follow_user_ids[] = $this->id;
         return Twitter::whereIn('user_id', $follow_user_ids);
     }
+
+    public function favorites() {
+        return $this->belongsToMany(Twitter::class, 'favorites', 'user_id', 'twitter_id')->withTimestamps();
+    }
+
+    public function favorite($userId) {
+        //  既にお気に入り登録しているかの確認
+        $exist = $this->is_favorite($userId);
+
+        if ($exist) {
+            //  既にお気に入り登録済みだったら何もしない
+            return false;
+        } else {
+            //  お気に入り登録されていなかったら
+            $this->favorites()->attach($userId);
+            return true;
+        }
+    }
+
+    public function unfavorite($userId) {
+        //  既にお気に入り登録しているかの確認
+        $exist = $this->is_favorite($userId);
+
+        if ($exist) {
+            //  既にお気に入り登録済みだったらお気に入りを解除する
+            $this->favorites()->detach($userId);
+            return true;
+        } else {
+            //  お気に入り登録されていなかったら
+            return false;
+        }
+    }
+
+    public function is_favorite($userId) {
+        return $this->favorites()->where('twitter_id', $userId)->exists();
+    }
 }
